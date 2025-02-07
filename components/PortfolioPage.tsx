@@ -12,13 +12,13 @@ import {
   Server,
   Database,
   Github,
-  Workflow
+  Workflow,
+  LucideIcon
 } from 'lucide-react';
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
 interface Skill {
   name: string;
-  icon: ForwardRefExoticComponent<RefAttributes<SVGSVGElement>>;
+  icon: LucideIcon;
   description: string;
   color: string;
 }
@@ -156,10 +156,9 @@ const PortfolioPage = () => {
                 <div className="relative bg-gray-800/50 p-6 h-full border border-gray-700/50 rounded-xl group-hover:border-blue-500/50 transition-colors">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-lg">
-                      <skill.icon
-                        width={24}
-                        height={24}
+                      <skill.icon 
                         className="text-blue-400 group-hover:text-blue-300 transition-colors"
+                        size={24}
                       />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-200 group-hover:text-white transition-colors">
