@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Camera, 
   MessageSquare, 
@@ -13,7 +15,13 @@ import {
   Database,
   Github,
   Workflow,
-  LucideIcon
+  LucideIcon,
+  Network,
+  Globe,
+  Zap,
+  Layers,
+  Rocket,
+  Lock
 } from 'lucide-react';
 
 interface Skill {
@@ -21,192 +29,360 @@ interface Skill {
   icon: LucideIcon;
   description: string;
   color: string;
+  category: 'Blockchain' | 'Frontend' | 'Tools';
 }
 
 const PortfolioPage = () => {
-  const [, setIsHovered] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [currentCategory, setCurrentCategory] = useState<'Blockchain' | 'Frontend' | 'Tools'>('Blockchain');
 
   const skills: Skill[] = [
+    // Blockchain Skills
+    { 
+      name: 'Solidity', 
+      icon: Network,
+      description: 'Smart Contract Development',
+      color: 'from-blue-400/10 to-blue-600/10',
+      category: 'Blockchain'
+    },
+    { 
+      name: 'Web3.js', 
+      icon: Globe,
+      description: 'Blockchain Interaction',
+      color: 'from-cyan-400/10 to-cyan-600/10',
+      category: 'Blockchain'
+    },
+    { 
+      name: 'Hardhat', 
+      icon: Lock,
+      description: 'Smart Contract Tooling',
+      color: 'from-green-400/10 to-green-600/10',
+      category: 'Blockchain'
+    },
+    { 
+      name: 'Ethereum', 
+      icon: Zap,
+      description: 'Blockchain Ecosystem',
+      color: 'from-purple-400/10 to-purple-600/10',
+      category: 'Blockchain'
+    },
+    
+    // Frontend Skills
+    { 
+      name: 'React', 
+      icon: Layers,
+      description: 'Component-based UI',
+      color: 'from-cyan-400/10 to-cyan-600/10',
+      category: 'Frontend'
+    },
     { 
       name: 'TypeScript', 
       icon: Code2,
-      description: 'Type-safe development',
-      color: 'from-blue-400/10 to-blue-600/10'
-    },
-    { 
-      name: 'React', 
-      icon: Atom,
-      description: 'Component-based UI',
-      color: 'from-cyan-400/10 to-cyan-600/10'
+      description: 'Type-safe Development',
+      color: 'from-blue-400/10 to-blue-600/10',
+      category: 'Frontend'
     },
     { 
       name: 'Next.js', 
-      icon: Boxes,
-      description: 'Full-stack framework',
-      color: 'from-gray-400/10 to-gray-600/10'
+      icon: Rocket,
+      description: 'Full-stack Framework',
+      color: 'from-gray-400/10 to-gray-600/10',
+      category: 'Frontend'
     },
     { 
       name: 'TailwindCSS', 
       icon: Palette,
       description: 'Utility-first CSS',
-      color: 'from-teal-400/10 to-teal-600/10'
+      color: 'from-teal-400/10 to-teal-600/10',
+      category: 'Frontend'
     },
+    
+    // Tools
     { 
-      name: 'Node.js', 
-      icon: Server,
-      description: 'Backend development',
-      color: 'from-green-400/10 to-green-600/10'
+      name: 'Git', 
+      icon: Github,
+      description: 'Version Control',
+      color: 'from-orange-400/10 to-orange-600/10',
+      category: 'Tools'
     },
     { 
       name: 'GraphQL', 
       icon: Database,
-      description: 'API architecture',
-      color: 'from-pink-400/10 to-pink-600/10'
-    },
-    { 
-      name: 'Git', 
-      icon: Github,
-      description: 'Version control',
-      color: 'from-orange-400/10 to-orange-600/10'
+      description: 'API Architecture',
+      color: 'from-pink-400/10 to-pink-600/10',
+      category: 'Tools'
     },
     { 
       name: 'CI/CD', 
       icon: Workflow,
-      description: 'Automated workflows',
-      color: 'from-purple-400/10 to-purple-600/10'
+      description: 'Automated Workflows',
+      color: 'from-purple-400/10 to-purple-600/10',
+      category: 'Tools'
+    },
+    { 
+      name: 'Node.js', 
+      icon: Server,
+      description: 'Backend Development',
+      color: 'from-green-400/10 to-green-600/10',
+      category: 'Tools'
     }
   ];
 
+
   const handleGetInTouch = () => {
-    window.open('https://t.me/linked_ev', '_blank');
+    window.open('https://t.me/etcmyx', '_blank');
+  };
+
+  const navVariants = {
+    hidden: { opacity: 0, y: -50 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.5,
+        delayChildren: 0.3,
+        staggerChildren: 0.1 
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-x-hidden">
-      <nav className="fixed w-full bg-black/30 backdrop-blur-sm z-50">
-        <div className="container mx-auto px-6 py-4 flex flex-wrap justify-between items-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            linked-ts
-          </h1>
-          <div className="flex flex-wrap gap-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-x-hidden"
+    >
+      <motion.nav 
+        variants={navVariants}
+        initial="hidden"
+        animate="visible"
+        className="fixed w-full bg-black/30 backdrop-blur-sm z-50"
+      >
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-between items-center">
+          <motion.h1 
+            variants={itemVariants}
+            className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+          >
+            etcmyx
+          </motion.h1>
+          <motion.div 
+            variants={itemVariants}
+            className="flex flex-wrap gap-4 sm:gap-6"
+          >
             {['About', 'Skills', 'Contact'].map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="relative group px-4 py-2"
+                className="relative group px-2 sm:px-4 py-2"
+                onMouseEnter={() => setActiveSection(item)}
+                onMouseLeave={() => setActiveSection(null)}
               >
                 <span className="relative z-10 text-gray-300 group-hover:text-white transition-colors duration-300">
                   {item}
                 </span>
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></div>
+                <AnimatePresence>
+                  {activeSection === item && (
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: '100%' }}
+                      exit={{ width: 0 }}
+                      className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"
+                    />
+                  )}
+                </AnimatePresence>
               </a>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </nav>
+      </motion.nav>
 
-      <section className="min-h-screen flex items-center justify-center pt-16">
-        <div className="container mx-auto px-6 flex flex-col items-center gap-12">
-          <div className="relative w-64 h-64 md:w-96 md:h-96 animate-float">
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="min-h-screen flex items-center justify-center pt-16"
+      >
+        <div className="container mx-auto px-4 sm:px-6 flex flex-col items-center gap-8 sm:gap-12">
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 animate-float"
+          >
             <img 
               src="/developer.jpg"
               alt="Developer" 
               className="rounded-full w-full h-full object-cover border-4 border-blue-400"
             />
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20"></div>
-          </div>
+          </motion.div>
           
           <div className="text-center max-w-3xl">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-              Frontend Developer
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 animate-fade-in"
+            >
+              Web3 Developer
               <span className="block text-transparent bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text">
-                TypeScript Expert
+                Blockchain Specialist
               </span>
-            </h2>
-            <p className="text-gray-400 text-lg mb-8">
-              Crafting exceptional web experiences with modern technologies.
-              Specialized in React, Next.js, and TypeScript development.
-              Building scalable and performant applications with a focus on user experience.
-            </p>
-            <button 
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-gray-400 text-base sm:text-lg mb-6 sm:mb-8"
+            >
+              Pioneering decentralized solutions with cutting-edge Web3 technologies. 
+              Specialized in smart contract development, blockchain architecture, 
+              and creating innovative decentralized applications (DApps).
+            </motion.p>
+            <motion.button 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
               onClick={handleGetInTouch}
-              className="relative overflow-hidden group bg-transparent border-2 border-blue-500 px-12 py-3 rounded-full transition-all hover:shadow-lg hover:shadow-blue-500/25"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
+              className="relative overflow-hidden group bg-transparent border-2 border-blue-500 px-8 sm:px-12 py-2 sm:py-3 rounded-full transition-all hover:shadow-lg hover:shadow-blue-500/25"
             >
               <span className="relative z-10 text-white group-hover:text-white transition-colors">Get In Touch</span>
               <div className="absolute top-0 left-0 w-0 h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 group-hover:w-full"></div>
-            </button>
+            </motion.button>
           </div>
         </div>
-      </section>
+      </motion.section>
   
-      <section id="skills" className="py-20 bg-black/30">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold mb-16 text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true }}
+        id="skills" 
+        className="py-12 sm:py-20 bg-black/30"
+      >
+        <div className="container mx-auto px-4 sm:px-6">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-16 text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Technical Skills
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {skills.map((skill) => (
-              <div 
-                key={skill.name}
-                className="group relative overflow-hidden rounded-xl backdrop-blur-sm transition-all duration-300 hover:transform hover:scale-105"
+
+          {/* Навигация по категориям */}
+          <div className="flex justify-center mb-8 space-x-4">
+            {(['Blockchain', 'Frontend', 'Tools'] as const).map((category) => (
+              <motion.button
+                key={category}
+                onClick={() => setCurrentCategory(category)}
+                className={`px-4 py-2 rounded-full transition-all duration-300 ${
+                  currentCategory === category 
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' 
+                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-100 group-hover:opacity-100`} />
-                <div className="relative bg-gray-800/50 p-6 h-full border border-gray-700/50 rounded-xl group-hover:border-blue-500/50 transition-colors">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-lg">
-                      <skill.icon 
-                        className="text-blue-400 group-hover:text-blue-300 transition-colors"
-                        size={24}
-                      />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-200 group-hover:text-white transition-colors">
-                      {skill.name}
-                    </h3>
-                  </div>
-                  <p className="text-gray-400 group-hover:text-gray-300 transition-colors">
-                    {skill.description}
-                  </p>
-                </div>
-              </div>
+                {category} Skills
+              </motion.button>
             ))}
           </div>
-        </div>
-      </section>
 
-      <section id="contact" className="py-20">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          {/* Слайдер навыков */}
+          <div className="relative w-full max-w-4xl mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={currentCategory}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6"
+              >
+                {skills
+                  .filter((skill) => skill.category === currentCategory)
+                  .map((skill) => (
+                    <motion.div 
+                      key={skill.name}
+                      whileHover={{ scale: 1.05 }}
+                      className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-lg">
+                          <skill.icon 
+                            className="text-blue-400"
+                            size={24}
+                          />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-200">
+                          {skill.name}
+                        </h3>
+                      </div>
+                      <p className="text-sm text-gray-400">
+                        {skill.description}
+                      </p>
+                    </motion.div>
+                  ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </motion.section>
+
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true }}
+        id="contact" 
+        className="py-12 sm:py-20"
+      >
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Get in Touch With Me
           </h2>
-          <div className="flex justify-center gap-8">
+          <div className="flex justify-center gap-6 sm:gap-8">
             {[ 
-              { Icon: Camera, href: 'https://github.com/linked-ts', label: 'Portfolio', isExternal: true },
-              { Icon: MessageSquare, href: 'https://t.me/linked_ev', label: 'Message', isExternal: true }
+              { Icon: Camera, href: 'https://t.me/etcmyx_about', label: 'Portfolio', isExternal: true },
+              { Icon: MessageSquare, href: 'https://t.me/etcmyx', label: 'Message', isExternal: true }
             ].map(({ Icon, href, label, isExternal }) => (
-              <a
+              <motion.a
                 key={label}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
                 href={href}
                 target={isExternal ? '_blank' : '_self'}
                 rel={isExternal ? 'noopener noreferrer' : ''}
                 className="group flex flex-col items-center gap-2 hover:text-blue-400 transition-colors"
               >
-                <div className="p-4 rounded-full bg-gray-800/50 group-hover:bg-blue-500/10 transition-colors">
-                  <Icon size={24} />
+                <div className="p-3 sm:p-4 rounded-full bg-gray-800/50 group-hover:bg-blue-500/10 transition-colors">
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <span className="text-sm">{label}</span>
-              </a>
+                <span className="text-xs sm:text-sm">{label}</span>
+              </motion.a>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <footer className="bg-black/30 py-6">
-        <div className="container mx-auto px-6 text-center text-gray-400">
-          <p>© 2025 linked-ts. All rights reserved.</p>
+      <motion.footer 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-black/30 py-4 sm:py-6"
+      >
+        <div className="container mx-auto px-4 sm:px-6 text-center text-gray-400">
+          <p className="text-xs sm:text-sm">© 2025 etcmyx. All rights reserved.</p>
         </div>
-      </footer>
+      </motion.footer>
 
       <style jsx global>{`
         /* Custom Scrollbar */
@@ -243,7 +419,7 @@ const PortfolioPage = () => {
           animation: fade-in 1s ease-out forwards;
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 };
 
